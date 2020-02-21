@@ -9,6 +9,10 @@ import {
 } from 'react-native';
 
 export default class ArticlePage extends Component {
+	static navigationOptions = {
+		title: '',
+		headerTitle: <Image style={{height:40, resizeMode:'contain'}} source={require('./falconLogo.png')}/>,
+	};
 	constructor (props) {
 		super(props)
 		this.state = {headline:"", byline:"", story:"", imageLink:"", caption:"", fetched:false, storyLink:""}
@@ -23,7 +27,6 @@ export default class ArticlePage extends Component {
 			// For ID use pound symbol
 			// For Class use dot
 			var paragraphList = root.querySelector('.story_body').childNodes
-			console.log(paragraphList)
 			var storyParagraphs = []
 			for (var i = 0; i < paragraphList.length; i++) {
 				storyParagraphs.push(paragraphList[i].rawText)
@@ -70,9 +73,6 @@ export default class ArticlePage extends Component {
 		} else {
 			return (
 				<View style={styles.container}>
-					<View style={styles.stationaryImageView}>
-						<Image source={require('./download.png')} />
-					</View>
 					<ScrollView>
 						<Text style={styles.title1}>
 							{ this.state.headline }
@@ -93,7 +93,6 @@ export default class ArticlePage extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		paddingVertical: 30,
 		flex: 1,
 		justifyContent: 'center', 
 		alignItems: 'flex-start',
@@ -101,14 +100,6 @@ const styles = StyleSheet.create({
 	}, 
 	extraImageStyleThing: {
 		paddingVertical: 0,
-		flex: 1,
-		justifyContent: 'center', 
-		alignItems: 'flex-start',
-		backgroundColor: '#FFFFFF'
-	}, 
-	stationaryImageView: {
-		paddingVertical: 45,
-		paddingBottom: 25, 
 		flex: 1,
 		justifyContent: 'center', 
 		alignItems: 'flex-start',

@@ -1,8 +1,6 @@
 # FalconApp
 
-A newspaper app for the Saratoga Falcon Newspaper App. It still needs some polishing, but most major functionality is present. 
-
-See the images in this folder for screenshots of the app. 
+A newspaper app for the Saratoga Falcon Newspaper App built with React Native, CocoaPods, and a witches brew of other build tools. It still needs some polishing, but most major functionality is present. 
 
 ![Alt text](/screenshots/homescreen.png?raw=true "Home Screen")
 ![Alt text](/screenshots/storylist.png?raw=true "Section Screen")

@@ -12,39 +12,132 @@ import {
 	Button
 } from 'react-native';
 
-export default class TestPage extends Component {
-	static navigationOptions = {
-		title: 'Welcome',
-	};
+export class RenderRow extends Component {
 	constructor (props) {
 		super(props)
-		this.state = {section:"", storyList:[], fetched:false}
+		this.state = {headline:this.props.headline, description:this.props.description, imageLink:this.props.imageLink}
 	}
+	componentDidMount () {}
 	render () {
-		const {navigate} = this.props.navigation;
+		if (this.state.imageLink != '') {
+			picture = <View style={styles.rowImageContainer}><Image style={{width:100, height:100}} source={{uri: this.state.imageLink}} /></View>
+		} else {
+			picture = <View style={styles.rowImageContainer}></View>
+		}
 		return (
-			<View style={styles.container}>
-				<View style={styles.stationaryImageView}>
-					<Image source={require('./download.png')} />
+			<View style={styles.rowContainer}>
+				{ picture }
+				<View style={styles.rowTextContainer}>
+					<Text style={styles.headlineText}>{ this.state.headline }</Text>
+					<Text style={styles.descriptionText}>{ this.state.description }</Text>
 				</View>
-				<Button title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news'})}></Button>
-				<Button title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion'})}></Button>
-				<Button title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features'})}></Button>
-				<Button title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports'})}></Button>
-				<Button title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns'})}></Button>
 			</View>
 		);
 	}
 }
 
+export default class TestPage extends Component {
+	static navigationOptions = {
+		title: '',
+		headerTitle: <Image style={{height:40, resizeMode:'contain'}} source={require('./falconLogo.png')}/>,
+	};
+	constructor (props) {
+		super(props)
+		this.state = {section:"", storyList:[], fetched:false}
+	}
+	componentDidMount () {
+		const { navigation } = this.props;
+		fetch('https://www.saratogafalcon.org')
+		.then((response) => response.text())
+		.then((responseText) => {
+			var root = HTMLParser.parse(responseText)
+			// For ID use pound symbol
+			// For Class use dot
+			var teaserList = root.querySelectorAll('.spotlight_story')
+			var parsedTeaserList = []
+			var tHead = ''
+			var tDesc = ''
+			var tImgUrl = ''
+			var tStoryLink = 'https://www.saratogafalcon.org/content/problem-while-fetching-story-0'
+			var parsedTeaser = {}
+			for (var i = 0; i < teaserList.length; i++) {
+				tHead = teaserList[i].querySelector('.spotlight_title').rawText
+				tDesc = teaserList[i].querySelector('.spotlight_text').rawText.split('read more &raquo;').shift().trim()
+				tStoryLink = 'https://www.saratogafalcon.org' + teaserList[i].querySelector('.spotlight_title').firstChild.attributes['href']
+				try {
+					tImgUrl = teaserList[i].querySelector('.spotlight_image').lastChild.attributes['src']
+				} catch {
+					tImgUrl = ''
+				}
+				parsedTeaser = {headline:tHead, description:tDesc, imageLink:tImgUrl, storyLink:tStoryLink}
+				parsedTeaserList.push(parsedTeaser)
+			}
+			this.setState(previousState => ({
+				storyList:parsedTeaserList,
+				fetched:true
+			}))
+		})
+		.catch((error) => {
+		  console.error(error);
+		});
+	}
+	render () {
+		const {navigate} = this.props.navigation;
+		if (!this.state.fetched) {
+			return (
+				<View style={styles.container}>
+					<View style={styles.spotlightViewStyle}>
+						<Button color='#010101' title="Loading..."></Button>
+					</View>
+					<View style={styles.sectionListStyle}>
+						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'News'})}></Button>
+						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'Opinion'})}></Button>
+						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'Features'})}></Button>
+						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'Sports'})}></Button>
+						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'Columns'})}></Button>
+					</View>
+				</View>
+			);
+		} else {
+			return (
+				<View style={styles.container}>
+					<View style={styles.spotlightViewStyle}>
+						<FlatList style={styles.flatListStyle} data={this.state.storyList}
+						renderItem={({item}) => <TouchableOpacity onPress={() => navigate('Article', {storyLink: item.storyLink})}> 
+								<RenderRow headline={item.headline} description={item.description} imageLink={item.imageLink}></RenderRow>
+							</TouchableOpacity>}
+						keyExtractor={(item, index) => index.toString()} />
+					</View>
+					<View style={styles.sectionListStyle}>
+						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'News'})}></Button>
+						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'Opinion'})}></Button>
+						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'Features'})}></Button>
+						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'Sports'})}></Button>
+						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'Columns'})}></Button>
+					</View>
+				</View>
+			);
+		}
+	}
+}
+
 const styles = StyleSheet.create({
 	container: {
-		paddingVertical: 30,
+		paddingVertical: 0,
 		flex: 1,
 		justifyContent: 'center', 
-		alignItems: 'flex-start',
+		alignItems: 'stretch',
 		backgroundColor: '#FFFFFF'
 	}, 
+	sectionListStyle: {
+		flex: 1,
+		backgroundColor: '#FAFAFA',
+		justifyContent: 'flex-start', 
+		alignItems: 'flex-start',
+	}, 
+	spotlightViewStyle: {
+		flex:2, 
+	},
 	flatListStyle: {
 		alignSelf: "stretch"
 	},
@@ -68,19 +161,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "column",
 	}, 
-	stationaryImageView: {
-		paddingVertical: 45,
-		paddingBottom: 25, 
-		flex: 1,
-		justifyContent: 'center', 
-		alignItems: 'flex-start',
-	},
-	categoryText: {
-		fontSize: 40, 
-		textAlign: 'auto',
-		color: '#000000', 
-		margin: 10
-	},
 	headlineText: {
 		flex: 0,
 		includeFontPadding: false,
@@ -96,18 +176,5 @@ const styles = StyleSheet.create({
 		fontSize: 18, 
 		color: '#120000', 
 		margin: 10
-	},
-	caption: {
-		fontSize: 12, 
-		textAlign: 'auto',
-		color: '#9E9E9E', 
-		margin: 10
-	},
-	imageStyle: {
-		flex: 1,
-		width: '100%', 
-		height: undefined,
-		aspectRatio: 1,
-		resizeMode: 'contain'
 	}
 })

@@ -8,7 +8,8 @@ import {
 	ScrollView,
 	FlatList, 
 	TouchableOpacity,
-	View
+	View,
+	Button 
 } from 'react-native';
 
 export class RenderRow extends Component {
@@ -37,11 +38,51 @@ export class RenderRow extends Component {
 
 export default class TestPage extends Component {
 	static navigationOptions = {
-		title: 'News',
+		title: '',
+		headerTitle: <Image style={{height:40, resizeMode:'contain'}} source={require('./falconLogo.png')}/>,
 	};
+	addStories(page) {
+		const { navigation } = this.props;
+		fetch(navigation.getParam('storyLink', '') + "?page=" + this.state.page)
+		.then((response) => response.text())
+		.then((responseText) => {
+			var root = HTMLParser.parse(responseText)
+			// For ID use pound symbol
+			// For Class use dot
+			var teaserList = root.querySelectorAll('.falcon_story_teaser')
+			var parsedTeaserList = this.state.storyList
+			var oldPage = this.state.page
+			var tHead = ''
+			var tDesc = ''
+			var tImgUrl = ''
+			var tStoryLink = 'https://www.saratogafalcon.org/content/problem-while-fetching-story-0'
+			var parsedTeaser = {}
+			for (var i = 0; i < teaserList.length; i++) {
+				tHead = teaserList[i].querySelector('.teaser_header').rawText
+				tDesc = teaserList[i].querySelector('.teaser .content').rawText.trim()
+				tStoryLink = 'https://www.saratogafalcon.org' + teaserList[i].querySelector('.teaser_header').firstChild.attributes['href']
+				try {
+					tImgUrl = teaserList[i].querySelector('.teaser_image').firstChild.firstChild.attributes['src']
+				} catch {
+					tImgUrl = ''
+				}
+				parsedTeaser = {headline:tHead, description:tDesc, imageLink:tImgUrl, storyLink:tStoryLink}
+				parsedTeaserList.push(parsedTeaser)
+			}
+			this.setState(previousState => ({
+				section:root.querySelector('#page-title').text.trim(), 
+				storyList:parsedTeaserList,
+				fetched:true,
+				page:this.state.page+1
+			}))
+		})
+		.catch((error) => {
+		  console.error(error);
+		});
+	}
 	constructor (props) {
 		super(props)
-		this.state = {section:"", storyList:[], fetched:false}
+		this.state = {section:"", storyList:[], fetched:false, page:1}
 	}
 	componentDidMount () {
 		const { navigation } = this.props;
@@ -93,10 +134,10 @@ export default class TestPage extends Component {
 		} else {
 			return (
 				<View style={styles.container}>
-					<View style={styles.stationaryImageView}>
-						<Image source={require('./download.png')} />
+					<View style={{height:50, backgroundColor:'#EEEEEE'}}>
+						<Text style={styles.pageTitleText}>{this.state.section}</Text>
 					</View>
-					<FlatList style={styles.flatListStyle} data={this.state.storyList} 
+					<FlatList style={styles.flatListStyle} data={this.state.storyList} onEndReached={() => {this.addStories(this.state.page);}} onEndReachedThreshold={2}
 					renderItem={({item}) => <TouchableOpacity onPress={() => navigate('Article', {storyLink: item.storyLink})}> 
 							<RenderRow headline={item.headline} description={item.description} imageLink={item.imageLink}></RenderRow>
 						</TouchableOpacity>}
@@ -109,13 +150,13 @@ export default class TestPage extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		paddingVertical: 30,
 		flex: 1,
 		justifyContent: 'center', 
-		alignItems: 'flex-start',
+		alignItems: 'stretch',
 		backgroundColor: '#FFFFFF'
 	}, 
 	flatListStyle: {
+		flex: 1,
 		alignSelf: "stretch"
 	},
 	rowContainer: {
@@ -137,18 +178,19 @@ const styles = StyleSheet.create({
 	rowTextContainer: {
 		flex: 1,
 		flexDirection: "column",
-	}, 
-	stationaryImageView: {
-		paddingVertical: 45,
-		paddingBottom: 25, 
-		flex: 1,
-		justifyContent: 'center', 
-		alignItems: 'flex-start',
 	},
 	categoryText: {
 		fontSize: 40, 
 		textAlign: 'auto',
 		color: '#000000', 
+		margin: 10
+	},
+	pageTitleText: {
+		flex: 0,
+		includeFontPadding: false,
+		fontSize: 30, 
+		textAlignVertical: "top",
+		color: '#840000', 
 		margin: 10
 	},
 	headlineText: {
@@ -166,18 +208,5 @@ const styles = StyleSheet.create({
 		fontSize: 18, 
 		color: '#120000', 
 		margin: 10
-	},
-	caption: {
-		fontSize: 12, 
-		textAlign: 'auto',
-		color: '#9E9E9E', 
-		margin: 10
-	},
-	imageStyle: {
-		flex: 1,
-		width: '100%', 
-		height: undefined,
-		aspectRatio: 1,
-		resizeMode: 'contain'
 	}
 })

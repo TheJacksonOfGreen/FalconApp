@@ -8,7 +8,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 const MainNavigator = createStackNavigator({
 	SectionList: {screen: SectionList},
 	Section: {screen: Section},
-	Article: {screen: Article}
+	Article: {screen: Article},
 });
 
 const App = createAppContainer(MainNavigator);
