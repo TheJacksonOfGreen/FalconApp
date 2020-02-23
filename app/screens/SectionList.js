@@ -108,6 +108,7 @@ export default class TestPage extends Component {
 							</TouchableOpacity>}
 						keyExtractor={(item, index) => index.toString()} />
 					</View>
+					<View style={{height: 1, backgroundColor: '#A3A1A1'}}></View>
 					<View style={styles.sectionListStyle}>
 						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'News'})}></Button>
 						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'Opinion'})}></Button>
@@ -131,7 +132,6 @@ const styles = StyleSheet.create({
 	}, 
 	sectionListStyle: {
 		flex: 1,
-		backgroundColor: '#FAFAFA',
 		justifyContent: 'flex-start', 
 		alignItems: 'flex-start',
 	}, 

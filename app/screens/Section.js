@@ -134,9 +134,10 @@ export default class TestPage extends Component {
 		} else {
 			return (
 				<View style={styles.container}>
-					<View style={{height:50, backgroundColor:'#EEEEEE'}}>
+					<View style={{height:50}}>
 						<Text style={styles.pageTitleText}>{this.state.section}</Text>
 					</View>
+					<View style={{height: 1, backgroundColor: '#A3A1A1'}}></View>
 					<FlatList style={styles.flatListStyle} data={this.state.storyList} onEndReached={() => {this.addStories(this.state.page);}} onEndReachedThreshold={2}
 					renderItem={({item}) => <TouchableOpacity onPress={() => navigate('Article', {storyLink: item.storyLink})}> 
 							<RenderRow headline={item.headline} description={item.description} imageLink={item.imageLink}></RenderRow>
