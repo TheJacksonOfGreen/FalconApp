@@ -5,12 +5,18 @@ import {
 	StyleSheet, 
 	Text, 
 	Image, 
-	ScrollView,
 	FlatList, 
 	TouchableOpacity,
 	View,
+	ScrollView,
 	Button
 } from 'react-native';
+
+var decodeHTMLEntity = function(str) {
+	return str.replace(/&#(\d+);/g, function(match, dec) {
+		return String.fromCharCode(dec);
+	});
+};
 
 export class RenderRow extends Component {
 	constructor (props) {
@@ -28,8 +34,8 @@ export class RenderRow extends Component {
 			<View style={styles.rowContainer}>
 				{ picture }
 				<View style={styles.rowTextContainer}>
-					<Text style={styles.headlineText}>{ this.state.headline }</Text>
-					<Text style={styles.descriptionText}>{ this.state.description }</Text>
+					<Text style={styles.headlineText}>{ decodeHTMLEntity(this.state.headline) }</Text>
+					<Text style={styles.descriptionText}>{ decodeHTMLEntity(this.state.description) }</Text>
 				</View>
 			</View>
 		);
@@ -40,6 +46,7 @@ export default class TestPage extends Component {
 	static navigationOptions = {
 		title: '',
 		headerTitle: <Image style={{height:40, resizeMode:'contain'}} source={require('./falconLogo.png')}/>,
+		headerTintColor: '#A00000'
 	};
 	constructor (props) {
 		super(props)
@@ -89,13 +96,14 @@ export default class TestPage extends Component {
 					<View style={styles.spotlightViewStyle}>
 						<Button color='#010101' title="Loading..."></Button>
 					</View>
-					<View style={styles.sectionListStyle}>
-						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'News'})}></Button>
-						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'Opinion'})}></Button>
-						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'Features'})}></Button>
-						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'Sports'})}></Button>
-						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'Columns'})}></Button>
-					</View>
+					<ScrollView style={styles.scrollViewStyle} contentContainerStyle={{alignItems:'flex-start'}}>
+						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'NEWS'})}></Button>
+						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'OPINION'})}></Button>
+						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'FEATURES'})}></Button>
+						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'SPORTS'})}></Button>
+						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'COLUMNS'})}></Button>
+						<Button color='#a00000' title="About" onPress={() => navigate('About', {storyLink: 'https://www.https://www.saratogafalcon.org/about'})}></Button>
+					</ScrollView>
 				</View>
 			);
 		} else {
@@ -109,13 +117,14 @@ export default class TestPage extends Component {
 						keyExtractor={(item, index) => index.toString()} />
 					</View>
 					<View style={{height: 1, backgroundColor: '#A3A1A1'}}></View>
-					<View style={styles.sectionListStyle}>
-						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'News'})}></Button>
-						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'Opinion'})}></Button>
-						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'Features'})}></Button>
-						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'Sports'})}></Button>
-						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'Columns'})}></Button>
-					</View>
+					<ScrollView style={styles.scrollViewStyle} contentContainerStyle={{alignItems:'flex-start'}}>
+						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'NEWS'})}></Button>
+						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'OPINION'})}></Button>
+						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'FEATURES'})}></Button>
+						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'SPORTS'})}></Button>
+						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'COLUMNS'})}></Button>
+						<Button color='#a00000' title="About" onPress={() => navigate('About', {storyLink: 'https://www.saratogafalcon.org/about'})}></Button>
+					</ScrollView>
 				</View>
 			);
 		}
@@ -140,6 +149,10 @@ const styles = StyleSheet.create({
 	},
 	flatListStyle: {
 		alignSelf: "stretch"
+	},
+	scrollViewStyle: {
+		flex: 1,
+		width: '100%'
 	},
 	rowContainer: {
 		flex: 1,
@@ -167,14 +180,21 @@ const styles = StyleSheet.create({
 		fontSize: 20, 
 		textAlignVertical: "top",
 		color: '#A00000', 
-		margin: 10
+		marginTop: 2,
+		marginBottom: 2,
+		marginLeft: 5,
+		marginRight: 5
+	},
+	buttonStyle: {
+		fontSize: 2,
+		height: 25
 	},
 	descriptionText: {
 		flex: 0,
 		includeFontPadding: false,
 		textAlignVertical: "bottom",
-		fontSize: 18, 
+		fontSize: 16, 
 		color: '#120000', 
-		margin: 10
+		margin: 5
 	}
 })

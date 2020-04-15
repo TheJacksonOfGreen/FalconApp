@@ -11,11 +11,15 @@
   },
   "dependencies": {
     "fast-html-parser": "^1.0.1",
+    "linkify-it": "^2.2.0",
+    "mdurl": "^1.0.1",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.5.2",
+    "react-native-hyperlink": "0.0.19",
     "react-native-vector-icons": "^6.6.0",
+    "react-native-webview": "^8.1.2",
     "react-navigation": "^4.0.10",
     "react-navigation-stack": "^1.10.3",
     "util": "^0.12.1"

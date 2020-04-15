@@ -37,48 +37,48 @@ export default class ArticlePage extends Component {
 	}
 	componentDidMount () {
 		const { navigation } = this.props;
-		this.state.storyLink = navigation.getParam('storyLink', '')
+		this.state.storyLink = 'https://www.saratogafalcon.org/about';
 		fetch(this.state.storyLink)
 		.then((response) => response.text())
 		.then((responseText) => {
-			var root = HTMLParser.parse(responseText)
+			var root = HTMLParser.parse(responseText);
 			// For ID use pound symbol
 			// For Class use dot
 			if (root.querySelector('.node-type-falcon-shs-tv') != null) {
 				this.setState(previousState => ({
 					caption: 'ThisIsNotACaptionThisIsAnSHSTVLink',
 					ytLink: root.querySelector('iframe').attributes['src']}
-				))
+				));
 			}
-			var paragraphList = root.querySelector('.story_body').childNodes
+			var paragraphList = root.querySelector('.field-item').childNodes
 			var storyParagraphs = []
 			for (var i = 0; i < paragraphList.length; i++) {
 				if ((paragraphList[i].rawText.substring(0, 8) == 'https://') || (paragraphList[i].rawText.substring(0, 7) == 'http://')) {
-					storyParagraphs.push('\n' + paragraphList[i].firstChild.attributes['href'])
+					storyParagraphs.push('\n' + paragraphList[i].firstChild.attributes['href']);
 				} else {
-					storyParagraphs.push(paragraphList[i].rawText)
+					storyParagraphs.push(paragraphList[i].rawText);
 				}
 			}
-			var fullStory = "\t"
+			var fullStory = "\t";
 			for (var i = 0; i < storyParagraphs.length; i++) {
-				fullStory = fullStory.concat(storyParagraphs[i], "\t")
+				fullStory = fullStory.concat(storyParagraphs[i], "\t");
 			}
-			var linkToImage = ''
-			var theCaption = ''
+			var linkToImage = '';
+			var theCaption = '';
 			try {
-				linkToImage = root.querySelector('.falcon_photo_halfsize').firstChild.attributes['src']
-				theCaption = root.querySelector('.photo_caption').text
+				linkToImage = root.querySelector('.falcon_photo_halfsize').firstChild.attributes['src'];
+				theCaption = root.querySelector('.photo_caption').text;
 			} catch {}
 			if (this.state.caption == 'ThisIsNotACaptionThisIsAnSHSTVLink') {
 				this.setState(previousState => ({
-					headline:root.querySelector('#page-title').text.trim(), 
-					byline:root.querySelector('.author_info').text, 
+					headline:"none", 
+					byline:"none", 
 					fetched:true
 				}))
 			} else {
 				this.setState(previousState => ({
-					headline:root.querySelector('#page-title').text.trim(), 
-					byline:root.querySelector('.author_info').text, 
+					headline:"About", 
+					byline:"none", 
 					imageLink:linkToImage,
 					caption:theCaption,
 					story:fullStory,
@@ -98,7 +98,7 @@ export default class ArticlePage extends Component {
 				NavigationActions.navigate({ routeName: 'SectionList' })
 			],
 		});
-		var picture = ''
+		var picture = '';
 		if (this.state.imageLink != '') {
 			picture = <View style={styles.imageContainmentStyle}><Image style={styles.imageStyle} source={{uri: this.state.imageLink}} /><Text style={styles.caption}>{ this.state.caption }</Text></View>
 		} else if (this.state.caption == 'ThisIsNotACaptionThisIsAnSHSTVLink') {
@@ -117,14 +117,11 @@ export default class ArticlePage extends Component {
 		} else {
 			return (
 				<View style={styles.container}>
+					<View style={{height:50}}>
+						<Text style={styles.pageTitleText}>ABOUT</Text>
+					</View>
+					<View style={{height: 1, width: '100%', backgroundColor: '#A3A1A1'}}></View>
 					<ScrollView style={styles.scrollViewStyle}>
-						<Text style={styles.title1}>
-							{ ampRM(decodeHTMLEntity(this.state.headline)) }
-						</Text>
-						<Text style={styles.byline}>
-							{ ampRM(decodeHTMLEntity(this.state.byline)) }
-						</Text>
-						{ picture }
 						<Hyperlink linkDefault={ false } 
 							onPress={ (url, text) => {
 								//Sends links that go to sections on Website to App Sections
@@ -149,16 +146,21 @@ export default class ArticlePage extends Component {
 									//Link goes to external website, so just open it in browser.
 									Linking.openURL(url)
 								}}}
-							linkStyle={styles.linkText} 
+							linkStyle={ styles.linkText }
 							linkText={ url => {
 								if (url.substring(0,7) === 'mailto:') {
-								return url.substring(7, url.length)
-							} else if (url.length > 40) {
-								return url.substring(0,40) + '...'} else {return url} 
-							}}>
+									return url.substring(7, url.length)
+								} else if (url.length > 40) {
+									return url.substring(0,40) + '...'} else {return url} 
+								}
+							}>
 							<Text style={styles.bodyText}>
 									{ ampRM(decodeHTMLEntity(this.state.story)) }
 							</Text>
+						</Hyperlink>
+						<Hyperlink linkDefault={ true } linkText={ "Jackson Green" }> 
+							<Text style={styles.bodyText}> App Created by https://www.youtube.com/watch?v=dQw4w9WgXcQ </Text>
+							<Text style={styles.bodyText}>    </Text>
 						</Hyperlink>
 					</ScrollView>
 				</View>
@@ -202,6 +204,14 @@ const styles = StyleSheet.create({
 		fontSize: 18, 
 		textAlign: 'auto',
 		color: '#120000', 
+		margin: 10
+	},
+	pageTitleText: {
+		flex: 0,
+		includeFontPadding: false,
+		fontSize: 30, 
+		textAlignVertical: "top",
+		color: '#840000', 
 		margin: 10
 	},
 	linkText: {

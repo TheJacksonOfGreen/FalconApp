@@ -5,12 +5,17 @@ import {
 	StyleSheet, 
 	Text, 
 	Image, 
-	ScrollView,
 	FlatList, 
 	TouchableOpacity,
 	View,
 	Button 
 } from 'react-native';
+
+var decodeHTMLEntity = function(str) {
+	return str.replace(/&#(\d+);/g, function(match, dec) {
+		return String.fromCharCode(dec);
+	});
+};
 
 export class RenderRow extends Component {
 	constructor (props) {
@@ -28,8 +33,8 @@ export class RenderRow extends Component {
 			<View style={styles.rowContainer}>
 				{ picture }
 				<View style={styles.rowTextContainer}>
-					<Text style={styles.headlineText}>{ this.state.headline }</Text>
-					<Text style={styles.descriptionText}>{ this.state.description }</Text>
+					<Text style={styles.headlineText}>{ decodeHTMLEntity(this.state.headline) }</Text>
+					<Text style={styles.descriptionText}>{ decodeHTMLEntity(this.state.description) }</Text>
 				</View>
 			</View>
 		);
@@ -40,6 +45,7 @@ export default class TestPage extends Component {
 	static navigationOptions = {
 		title: '',
 		headerTitle: <Image style={{height:40, resizeMode:'contain'}} source={require('./falconLogo.png')}/>,
+		headerTintColor: '#A00000'
 	};
 	addStories(page) {
 		const { navigation } = this.props;
@@ -70,7 +76,7 @@ export default class TestPage extends Component {
 				parsedTeaserList.push(parsedTeaser)
 			}
 			this.setState(previousState => ({
-				section:root.querySelector('#page-title').text.trim(), 
+				section: navigation.getParam('pageTitle', ''), 
 				storyList:parsedTeaserList,
 				fetched:true,
 				page:this.state.page+1
@@ -112,7 +118,7 @@ export default class TestPage extends Component {
 				parsedTeaserList.push(parsedTeaser)
 			}
 			this.setState(previousState => ({
-				section:root.querySelector('#page-title').text.trim(), 
+				section: navigation.getParam('pageTitle', ''), 
 				storyList:parsedTeaserList,
 				fetched:true
 			}))
@@ -126,7 +132,7 @@ export default class TestPage extends Component {
 		if (!this.state.fetched) {
 			return (
 				<View style={styles.container}>
-					<Text style={styles.categoryText}>
+					<Text style={styles.loadingText}>
 						Loading...
 					</Text>
 				</View>
@@ -159,6 +165,12 @@ const styles = StyleSheet.create({
 	flatListStyle: {
 		flex: 1,
 		alignSelf: "stretch"
+	},
+	loadingText: {
+		fontSize: 20, 
+		textAlign: 'auto',
+		color: '#A00000', 
+		margin: 10
 	},
 	rowContainer: {
 		flex: 1,
@@ -200,14 +212,17 @@ const styles = StyleSheet.create({
 		fontSize: 20, 
 		textAlignVertical: "top",
 		color: '#A00000', 
-		margin: 10
+		marginTop: 2,
+		marginBottom: 2,
+		marginLeft: 5,
+		marginRight: 5
 	},
 	descriptionText: {
 		flex: 0,
 		includeFontPadding: false,
 		textAlignVertical: "bottom",
-		fontSize: 18, 
+		fontSize: 16, 
 		color: '#120000', 
-		margin: 10
+		margin: 5
 	}
 })
