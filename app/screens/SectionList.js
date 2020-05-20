@@ -89,6 +89,20 @@ export default class TestPage extends Component {
 		});
 	}
 	render () {
+		buttonList = <ScrollView style={styles.scrollViewStyle} contentContainerStyle={{alignItems:'flex-start'}}>
+						<View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+						<TouchableOpacity onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'NEWS'})}><Text style={styles.headlineText}>News</Text></TouchableOpacity>
+						<View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+						<TouchableOpacity onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'OPINION'})}><Text style={styles.headlineText}>Opinion</Text></TouchableOpacity>
+						<View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+						<TouchableOpacity onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'FEATURES'})}><Text style={styles.headlineText}>Features</Text></TouchableOpacity>
+						<View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+						<TouchableOpacity onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'SPORTS'})}><Text style={styles.headlineText}>Sports</Text></TouchableOpacity>
+						<View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+						<TouchableOpacity onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'COLUMNS'})}><Text style={styles.headlineText}>Columns</Text></TouchableOpacity>
+						<View style={{height: 5, backgroundColor: '#FFFFFF'}}></View>
+						<TouchableOpacity onPress={() => navigate('About', {storyLink: 'https://www.saratogafalcon.org/about'})}><Text style={styles.headlineText}>About</Text></TouchableOpacity>
+					</ScrollView>
 		const {navigate} = this.props.navigation;
 		if (!this.state.fetched) {
 			return (
@@ -96,14 +110,8 @@ export default class TestPage extends Component {
 					<View style={styles.spotlightViewStyle}>
 						<Button color='#010101' title="Loading..."></Button>
 					</View>
-					<ScrollView style={styles.scrollViewStyle} contentContainerStyle={{alignItems:'flex-start'}}>
-						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'NEWS'})}></Button>
-						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'OPINION'})}></Button>
-						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'FEATURES'})}></Button>
-						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'SPORTS'})}></Button>
-						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'COLUMNS'})}></Button>
-						<Button color='#a00000' title="About" onPress={() => navigate('About', {storyLink: 'https://www.saratogafalcon.org/about'})}></Button>
-					</ScrollView>
+					<View style={{height: 1, backgroundColor: '#A3A1A1'}}></View>
+					{ buttonList }
 				</View>
 			);
 		} else {
@@ -117,14 +125,7 @@ export default class TestPage extends Component {
 						keyExtractor={(item, index) => index.toString()} />
 					</View>
 					<View style={{height: 1, backgroundColor: '#A3A1A1'}}></View>
-					<ScrollView style={styles.scrollViewStyle} contentContainerStyle={{alignItems:'flex-start'}}>
-						<Button color='#a00000' title="News" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'NEWS'})}></Button>
-						<Button color='#a00000' title="Opinion" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/opinion', pageTitle:'OPINION'})}></Button>
-						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'FEATURES'})}></Button>
-						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'SPORTS'})}></Button>
-						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'COLUMNS'})}></Button>
-						<Button color='#a00000' title="About" onPress={() => navigate('About', {storyLink: 'https://www.saratogafalcon.org/about'})}></Button>
-					</ScrollView>
+					{ buttonList }
 				</View>
 			);
 		}
