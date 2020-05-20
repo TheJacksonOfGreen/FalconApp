@@ -37,7 +37,8 @@ export default class ArticlePage extends Component {
 	}
 	componentDidMount () {
 		const { navigation } = this.props;
-		this.state.storyLink = 'https://www.saratogafalcon.org/about';
+		//this.state.storyLink = 'https://www.saratogafalcon.org/about';
+		this.state.storyLink = navigation.getParam('storyLink', '')
 		fetch(this.state.storyLink)
 		.then((response) => response.text())
 		.then((responseText) => {
@@ -98,13 +99,26 @@ export default class ArticlePage extends Component {
 				NavigationActions.navigate({ routeName: 'SectionList' })
 			],
 		});
-		var picture = '';
-		if (this.state.imageLink != '') {
-			picture = <View style={styles.imageContainmentStyle}><Image style={styles.imageStyle} source={{uri: this.state.imageLink}} /><Text style={styles.caption}>{ this.state.caption }</Text></View>
-		} else if (this.state.caption == 'ThisIsNotACaptionThisIsAnSHSTVLink') {
-			picture = <View style={styles.shstvStyle}><WebView mediaPlaybackRequiresUserAction = {true} source={{uri: this.state.ytLink}} /></View>
+		// Reusing this page for Privacy Policy, this conditional changes footers and headers to accomodate. 
+		if (this.state.storyLink == 'https://www.saratogafalcon.org/content/privacy-policy') {
+			headerText = <Text style={styles.pageTitleText}>PRIVACY POLICY</Text>
 		} else {
-			picture = <View style={styles.imageContainmentStyle}></View>
+			headerText = <Text style={styles.pageTitleText}>ABOUT</Text>
+		}
+		if (this.state.storyLink == 'https://www.saratogafalcon.org/content/privacy-policy') {
+			footerButtons = <View></View>
+		} else {
+			footerButtons = <View><Hyperlink linkDefault={ true } linkText={ "Jackson Green" }> 
+								<Text style={styles.bodyText}> App Created by https://www.youtube.com/watch?v=dQw4w9WgXcQ </Text>
+								<Text style={styles.bodyText}>   </Text>
+							</Hyperlink>
+							<Hyperlink linkDefault={ false } linkText={ "Privacy Policy" } onPress={ (url, text) => {
+								navigate.dispatch(resetAction);
+								navigate.navigate('About', {storyLink: 'https://www.saratogafalcon.org/content/privacy-policy'});
+							} }>
+								<Text style={styles.linkText}> https://www.saratogafalcon.org/content/privacy-policy </Text>
+								<Text style={styles.bodyText}>   </Text>
+							</Hyperlink></View>
 		}
 		if (!this.state.fetched) {
 			return (
@@ -118,7 +132,7 @@ export default class ArticlePage extends Component {
 			return (
 				<View style={styles.container}>
 					<View style={{height:50}}>
-						<Text style={styles.pageTitleText}>ABOUT</Text>
+						{ headerText }
 					</View>
 					<View style={{height: 1, width: '100%', backgroundColor: '#A3A1A1'}}></View>
 					<ScrollView style={styles.scrollViewStyle}>
@@ -127,8 +141,8 @@ export default class ArticlePage extends Component {
 								//Sends links that go to sections on Website to App Sections
 								if (url.startsWith("https://www.saratogafalcon.org/")) {
 									//Because Section is higher in stack than story, need to reset to top before navigating down
-									if (url.endsWith('/news')) { 
-										navigate.dispatch(resetAction);
+									navigate.dispatch(resetAction);
+									if (url.endsWith('/news')) {
 										navigate.navigate('Section', {storyLink: 'https://www.saratogafalcon.org/news', pageTitle:'News'});
 									} else if (url.endsWith('/sports')) {
 										navigate.navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'Sports'});
@@ -158,10 +172,7 @@ export default class ArticlePage extends Component {
 									{ ampRM(decodeHTMLEntity(this.state.story)) }
 							</Text>
 						</Hyperlink>
-						<Hyperlink linkDefault={ true } linkText={ "Jackson Green" }> 
-							<Text style={styles.bodyText}> App Created by https://www.youtube.com/watch?v=dQw4w9WgXcQ </Text>
-							<Text style={styles.bodyText}>    </Text>
-						</Hyperlink>
+						{ footerButtons }
 					</ScrollView>
 				</View>
 			);

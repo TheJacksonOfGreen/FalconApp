@@ -102,7 +102,7 @@ export default class TestPage extends Component {
 						<Button color='#a00000' title="Features" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/features', pageTitle:'FEATURES'})}></Button>
 						<Button color='#a00000' title="Sports" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/sports', pageTitle:'SPORTS'})}></Button>
 						<Button color='#a00000' title="Columns" onPress={() => navigate('Section', {storyLink: 'https://www.saratogafalcon.org/columns', pageTitle:'COLUMNS'})}></Button>
-						<Button color='#a00000' title="About" onPress={() => navigate('About', {storyLink: 'https://www.https://www.saratogafalcon.org/about'})}></Button>
+						<Button color='#a00000' title="About" onPress={() => navigate('About', {storyLink: 'https://www.saratogafalcon.org/about'})}></Button>
 					</ScrollView>
 				</View>
 			);
