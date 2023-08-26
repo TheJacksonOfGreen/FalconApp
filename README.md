@@ -2,9 +2,9 @@
 
 A newspaper app for the Saratoga Falcon Newspaper App built with React Native, CocoaPods, and a witches brew of other build tools. All major functionality is present. 
 
-<img src="/screenshots/homescreen.png?raw=true" alt="Home Screen" width="350"/>
-<img src="/screenshots/storylist.png?raw=true" alt="Story List" width="350"/>
-<img src="/screenshots/story.png?raw=true" alt="Story Example" width="350"/>
+<img src="/screenshots/homescreen.png?raw=true" alt="Home Screen" width="400"/>
+<img src="/screenshots/storylist.png?raw=true" alt="Story List" width="400"/>
+<img src="/screenshots/story.png?raw=true" alt="Story Example" width="400"/>
 
 DEPENDENCIES: 
   - fast-html-parser v1.0.1
